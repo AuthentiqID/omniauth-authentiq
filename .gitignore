@@ -10,7 +10,6 @@
 /bin/
 /.yardoc
 /Gemfile.lock
-*.gem
 *.rbc
 .config
 InstalledFiles
