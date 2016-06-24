@@ -7,7 +7,7 @@ module OmniAuth
       BASE_URL = 'https://test.connect.authentiq.io/'
 
       # Authentiq strategy name
-      option :name, 'authentiq'
+      option :name, 'Authentiq ID'
 
       # Build the basic client options (url, authorization url, token url)
       option :client_options, {
@@ -15,6 +15,8 @@ module OmniAuth
           :authorize_url => "#{BASE_URL}/authorize",
           :token_url => "#{BASE_URL}/token"
       }
+
+      option :authorize_options, [:display, :scope, :callback_url]
 
       # These are called after authentication has succeeded. If
       # possible, you should try to set the UID without making
