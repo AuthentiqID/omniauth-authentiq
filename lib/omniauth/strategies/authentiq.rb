@@ -7,7 +7,7 @@ module OmniAuth
       BASE_URL = 'https://test.connect.authentiq.io/'
 
       # Authentiq strategy name
-      option :name, 'Authentiq ID'
+      option :name, 'authentiq'
 
       # Build the basic client options (url, authorization url, token url)
       option :client_options, {
