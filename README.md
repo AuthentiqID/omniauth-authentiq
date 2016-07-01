@@ -8,7 +8,7 @@ In order to use it, you will need to sign up for and Applications Key and Secret
 Add this line to your application's Gemfile (local path for now as it is not on rubygems repo):
 
 ```ruby
-gem 'omniauth-authentiq', '~> 0.0.1', :path => 'relative path to the gem folder e.g "../../Desktop/omniauth-authentiq"'
+gem 'omniauth-authentiq', '~> 0.2.0', :git => 'https://github.com/AuthentiqID/omniauth-authentiq.git'
 ```
 
 Then install the gem:
