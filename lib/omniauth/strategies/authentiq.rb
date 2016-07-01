@@ -4,7 +4,7 @@ module OmniAuth
   module Strategies
     class Authentiq < OmniAuth::Strategies::OAuth2
       #Set the base URL
-      BASE_URL = 'https://test.connect.authentiq.io/'
+      BASE_URL = 'https://connect.authentiq.io/'
 
       # Authentiq strategy name
       option :name, 'authentiq'
