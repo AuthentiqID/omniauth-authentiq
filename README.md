@@ -52,7 +52,11 @@ To use the gem in a GitLab development installation enable the omniauth function
 - { name: 'authentiq',
    app_id: ENV['AUTHENTIQ_KEY'],
    app_secret: ENV['AUTHENTIQ_SECRET'],
-   args: { scope: 'aq:name email~r aq:push' } }
+   args: { scope: 'aq:name email~r aq:push', 
+                   display: 'modal', 
+                   redirect_uri: 'mplamplampla' 
+         }
+   }
 ```
 
 ## Omnibus Installation
