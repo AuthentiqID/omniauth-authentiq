@@ -11,13 +11,9 @@ Add this line to your application's Gemfile (local path for now as it is not on 
 gem 'omniauth-authentiq', '~> 0.2.0', :git => 'https://github.com/AuthentiqID/omniauth-authentiq.git'
 ```
 
-Then install the gem:
+Then bundle:
 
     $ bundle
-
-`caution: if using on a gitlab development installation, please install only this gem and don't update everything with bundle`
-
-```$ gem install omniauth-authentiq```
 
 # Basic Usage
 ```
