@@ -14,7 +14,9 @@ module OmniAuth
           :site => BASE_URL,
           :authorize_url => "#{BASE_URL}/authorize",
           :token_url => "#{BASE_URL}/token"
-      }    
+      }
+
+      option :authorize_options, [:scope, :display, :redirect_uri]
 
       # These are called after authentication has succeeded. If
       # possible, you should try to set the UID without making
