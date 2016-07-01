@@ -23,11 +23,14 @@ end
 ```
 
 # Scopes
-Authentiq gives you the capability to request various data from the user. This is done by adding the scope parameters in the basic usage.
-If not added, the default scopes are Name, Email and Phone
+Authentiq gives you the capability to request various data from the user. This is done by adding the scope parameters to the basic usage.
+If not added, the default scopes are Name, Email and Phone. Other available options are display and redirect uri 
 ```
 use OmniAuth::Builder do
-  provider :authentiq, ENV['AUTHENTIQ_KEY'], ENV['AUTHENTIQ_SECRET'], scope: "space separated list of scopes" 
+  provider :authentiq, ENV['AUTHENTIQ_KEY'], ENV['AUTHENTIQ_SECRET'], 
+                    scope: 'aq:name email~r aq:push', 
+                    display: 'modal', 
+                    redirect_uri: 'mplamplampla'
 end
 ```
 
