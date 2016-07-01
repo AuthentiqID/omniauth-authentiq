@@ -24,13 +24,16 @@ end
 
 # Scopes
 Authentiq gives you the capability to request various data from the user. This is done by adding the scope parameters to the basic usage.
-If not added, the default scopes are Name, Email and Phone. Other available options are display and redirect uri 
+If not added, the default scopes are Name, Email and Phone. Other available options are display and redirect uri. Also you can configure the endpoint the gem uses
 ```
 use OmniAuth::Builder do
   provider :authentiq, ENV['AUTHENTIQ_KEY'], ENV['AUTHENTIQ_SECRET'], 
-                    scope: 'aq:name email~r aq:push', 
-                    display: 'modal', 
-                    redirect_uri: 'mplamplampla'
+           scope: 'aq:name email~r aq:push',
+           display: 'modal',
+           redirect_uri: 'redirect_uri',
+           client_options: {
+               site: 'authentiq endpoint'
+           }
 end
 ```
 
@@ -52,9 +55,13 @@ To use the gem in a GitLab development installation enable the omniauth function
 - { name: 'authentiq',
    app_id: ENV['AUTHENTIQ_KEY'],
    app_secret: ENV['AUTHENTIQ_SECRET'],
-   args: { scope: 'aq:name email~r aq:push', 
-                   display: 'modal', 
-                   redirect_uri: 'mplamplampla' 
+   args: { 
+           scope: 'aq:name email~r aq:push',
+           display: 'modal',
+           redirect_uri: 'redirect_uri',
+           client_options: {
+               site: 'authentiq endpoint'
+           }
          }
    }
 ```
