@@ -22,7 +22,7 @@ Then install the gem:
 # Basic Usage
 ```
 use OmniAuth::Builder do
-  provider :github, ENV['AUTHENTIQ_KEY'], ENV['AUTHENTIQ_SECRET']
+  provider :authentiq, ENV['AUTHENTIQ_KEY'], ENV['AUTHENTIQ_SECRET']
 end
 ```
 
