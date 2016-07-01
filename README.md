@@ -31,7 +31,7 @@ Authentiq gives you the capability to request various data from the user. This i
 If not added, the default scopes are Name, Email and Phone
 ```
 use OmniAuth::Builder do
-  provider :github, ENV['AUTHENTIQ_KEY'], ENV['AUTHENTIQ_SECRET'], scope: "space separated list of scopes" 
+  provider :authentiq, ENV['AUTHENTIQ_KEY'], ENV['AUTHENTIQ_SECRET'], scope: "space separated list of scopes" 
 end
 ```
 
