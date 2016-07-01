@@ -12,10 +12,11 @@ module OmniAuth
       # Build the basic client options (url, authorization url, token url)
       option :client_options, {
           :site => BASE_URL,
-          :authorize_url => "#{BASE_URL}/authorize",
-          :token_url => "#{BASE_URL}/token"
+          :authorize_url => '/authorize',
+          :token_url => '/token'
       }
 
+      # Get options from parameters
       option :authorize_options, [:scope, :display, :redirect_uri]
 
       # These are called after authentication has succeeded. If
@@ -56,7 +57,8 @@ module OmniAuth
       #
       # See: https://github.com/intridea/omniauth-oauth2/issues/81
       def callback_url
-        full_host + script_name + callback_path
+          # Fixes regression in omniauth-oauth2 v1.4.0 by https://github.com/intridea/omniauth-oauth2/commit/85fdbe117c2a4400d001a6368cc359d88f40abc7
+          options[:callback_url] || (full_host + script_name + callback_path)
       end
 
     end
