@@ -1,6 +1,6 @@
 # OmniAuth Authentiq
 
-Official OmniAuth strategy for authenticating with AuthentiqID. Please sign up for [Authentiq](https://www.authentiq.com/register/) to obtain application credentials.
+Official OmniAuth strategy for authenticating with AuthentiqID. Sign up for [Authentiq](https://www.authentiq.com/register/?utm_source=github&utm_medium=readme&utm_campaign=omniauth) to obtain your application credentials.
 
 ## Installation
 
