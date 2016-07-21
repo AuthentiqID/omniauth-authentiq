@@ -17,7 +17,7 @@ module OmniAuth
       }
 
       # Get options from parameters
-      option :authorize_options, [:scope, :display, :callback_url]
+      option :authorize_options, [:scope, :display]
 
       # These are called after authentication has succeeded. If
       # possible, you should try to set the UID without making
