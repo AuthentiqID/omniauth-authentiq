@@ -7,7 +7,7 @@ Official OmniAuth strategy for authenticating with AuthentiqID. Sign up for [Aut
 Add this line to your application's Gemfile (local path for now as it is not on rubygems repo):
 
 ```ruby
-gem 'omniauth-authentiq', '~> 0.2.0', :git => 'https://github.com/AuthentiqID/omniauth-authentiq.git'
+gem 'omniauth-authentiq', '~> 0.2.0', :git => 'https://gitlab.com/authentiq/omniauth-authentiq.git'
 ```
 
 Then bundle:
@@ -82,5 +82,5 @@ Tests are coming soon.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/AuthentiqID/omniauth-authentiq.
+Bug reports and pull requests are welcome on GitHub at https://gitlab.com/authentiq/omniauth-authentiq.
 
