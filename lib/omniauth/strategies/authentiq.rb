@@ -33,7 +33,7 @@ module OmniAuth
             :name => @raw_info['name'],
             :email => @raw_info['email'],
             :phone => @raw_info['phone_number'],
-            :addresss => @raw_info['address']
+            :address => @raw_info['address']
 
         }
       end
