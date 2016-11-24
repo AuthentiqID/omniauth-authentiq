@@ -28,13 +28,11 @@ module OmniAuth
       # Get the user id from raw info
       uid{ @raw_info['sub'] }
 
-      info do
-        {
+      info do {
             :name => @raw_info['name'],
             :email => @raw_info['email'],
             :phone => @raw_info['phone_number'],
             :address => @raw_info['address']
-
         }
       end
 
