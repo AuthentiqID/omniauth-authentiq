@@ -26,9 +26,10 @@ module OmniAuth
       # providers.
 
       # Get the user id from raw info
-      uid{ raw_info['sub'] }
+      uid { raw_info['sub'] }
 
-      info do {
+      info do
+        {
             :name => @raw_info['name'],
             :first_name => @raw_info['given_name'],
             :last_name => @raw_info['family_name'],
@@ -38,15 +39,15 @@ module OmniAuth
         }
       end
 
-      extra do {
-          :middle_name => @raw_info['middle_name'],
-          :email_verified => @raw_info['email_verified'],
-          :phone_type => @raw_info['phone_type'],
-          :phone_number_verified => @raw_info['phone_number_verified'],
-          :locale => @raw_info['locale'],
-          :zoneinfo => @raw_info['zoneinfo'],
-          :geolocation => @raw_info['aq:location']['formatted']
-      }
+      extra do
+        {
+            :middle_name => @raw_info['middle_name'],
+            :email_verified => @raw_info['email_verified'],
+            :phone_type => @raw_info['phone_type'],
+            :phone_number_verified => @raw_info['phone_number_verified'],
+            :locale => @raw_info['locale'],
+            :zoneinfo => @raw_info['zoneinfo']
+        }
       end
 
       def raw_info
@@ -58,8 +59,8 @@ module OmniAuth
       #
       # See: https://github.com/intridea/omniauth-oauth2/issues/81
       def callback_url
-          # Fixes regression in omniauth-oauth2 v1.4.0 by https://github.com/intridea/omniauth-oauth2/commit/85fdbe117c2a4400d001a6368cc359d88f40abc7
-          options[:callback_url] || (full_host + script_name + callback_path)
+        # Fixes regression in omniauth-oauth2 v1.4.0 by https://github.com/intridea/omniauth-oauth2/commit/85fdbe117c2a4400d001a6368cc359d88f40abc7
+        options[:callback_url] || (full_host + script_name + callback_path)
       end
 
     end
