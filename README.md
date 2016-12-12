@@ -4,15 +4,15 @@ Official OmniAuth strategy for authenticating with AuthentiqID. Sign up for [Aut
 
 ## Installation
 
-Add this line to your application's Gemfile (local path for now as it is not on rubygems repo):
+Add this line to your application's Gemfile
 
 ```ruby
-gem 'omniauth-authentiq', '~> 0.2.0', :git => 'https://gitlab.com/authentiq/omniauth-authentiq.git'
+gem 'omniauth-authentiq', '~> 0.2.0'
 ```
 
 Then bundle:
 
-    $ bundle
+    $ bundle install
 
 # Basic Usage
 
@@ -22,59 +22,33 @@ use OmniAuth::Builder do
 end
 ```
 
+
 # Scopes
 
-Authentiq gives you the capability to request various data from the user. This is done by adding the scope parameters to the basic usage. If not added, the default scopes are Name, Email and Phone. Other available options are display and redirect uri. Also you can configure the endpoint the gem uses
+Authentiq gives you the capability to request various data from the user. This is done by adding the scope parameters to the basic usage.
+
+Depending on your implementation, you may need to declare the redirect_uri parameter
 
 ```ruby
 use OmniAuth::Builder do
   provider :authentiq, ENV['AUTHENTIQ_KEY'], ENV['AUTHENTIQ_SECRET'], 
-           scope: 'aq:name email~r aq:push',
-           display: 'modal',
-           redirect_uri: 'redirect_uri',
-           client_options: {
-               site: 'authentiq endpoint'
-           }
+           scope: 'aq:name email~rs aq:push phone address',
+           redirect_uri: 'redirect_uri'
 end
 ```
 
 Available scopes are: 
-
 - `aq:name` for Name
 - `email` for Email
 - `phone` for Phone
 - `address` for Address
-- `aq:location` for Location
-- `aq:push`
-- `aq:link` 
+- `aq:location` for Location (Coordinates and geolocated address)
 
-# Gitlab installation usage
+Append `~r` to a scope to explicitly require it from the user.
 
-After adding the gem to your gemfile.
+Append `~s` or `~rs` to phone or email scope to explicitly require a signed and/or verified scope from the user.
 
-## Development Installation
-
-To use the gem in a GitLab development installation enable the omniauth functionality and add the configuration to you gitlab.rb.
-
-```yaml
-- { 
-   name: 'authentiq',
-   app_id: ENV['AUTHENTIQ_KEY'],
-   app_secret: ENV['AUTHENTIQ_SECRET'],
-   args: { 
-           scope: 'aq:name email~r aq:push',
-           display: 'modal',
-           redirect_uri: '<<your_redirect_uri>>',
-           client_options: {
-               site: 'https://connect.authentiq.io/'
-           }
-         }
-   }
-```
-
-## Omnibus Installation
-
-To use the gem in a GitLab Omnibus installation follow this link for general omniauth instructions http://docs.gitlab.com/ce/integration/omniauth.html
+To enable login via Push Notifications in the Authentiq ID mobile app, add `aq:push` to the list of scopes.
 
 ## Tests
 
