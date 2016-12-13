@@ -1,6 +1,7 @@
 # OmniAuth Authentiq
 
-Official OmniAuth strategy for authenticating with AuthentiqID. Sign up for [Authentiq](https://www.authentiq.com/register/?utm_source=github&utm_medium=readme&utm_campaign=omniauth) to obtain your application credentials.
+Official OmniAuth strategy for authenticating with an  Authentiq ID mobile app.
+Sign up for [Authentiq](https://www.authentiq.com/register/?utm_source=github&utm_medium=readme&utm_campaign=omniauth) to obtain your application credentials.
 
 ## Installation
 
@@ -14,7 +15,7 @@ Then bundle:
 
     $ bundle install
 
-# Basic Usage
+# Basic Usage with Rails
 
 ```ruby
 use OmniAuth::Builder do
@@ -22,12 +23,13 @@ use OmniAuth::Builder do
 end
 ```
 
-
 # Scopes
 
-Authentiq gives you the capability to request various data from the user. This is done by adding the scope parameters to the basic usage.
+Authentiq gives you the capability to request certain data like name, email and address from the Authentiq ID app.
+After the user consents, this information will be shared during authentication.
+Requesting specific information or "scopes" as done by adding the scope parameters to the basic usage.
 
-Depending on your implementation, you may need to declare the redirect_uri parameter
+Depending on your implementation, you may also need to declare the redirect_uri parameter
 
 ```ruby
 use OmniAuth::Builder do
@@ -43,12 +45,14 @@ Available scopes are:
 - `phone` for Phone
 - `address` for Address
 - `aq:location` for Location (Coordinates and geolocated address)
+- `aq:push` to request permission to sign in via Push Notifications in the Authentiq ID app
 
 Append `~r` to a scope to explicitly require it from the user.
 
-Append `~s` or `~rs` to phone or email scope to explicitly require a signed and/or verified scope from the user.
+Append `~s` to phone or email scope to explicitly require a verified (signed) scope.
 
-To enable login via Push Notifications in the Authentiq ID mobile app, add `aq:push` to the list of scopes.
+The `~s` and `~r` can be combined to `~rs` to indicate that the scope is both required and should be verified.
+
 
 ## Tests
 
@@ -56,5 +60,4 @@ Tests are coming soon.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://gitlab.com/authentiq/omniauth-authentiq.
-
+Bug reports and pull requests are welcome on GitHub at https://github.com/AuthentiqID/omniauth-authentiq.
