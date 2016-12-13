@@ -42,12 +42,16 @@ end
 ```
 
 Available scopes are: 
-- `aq:name` for Name
-- `email` for Email
-- `phone` for Phone
-- `address` for Address
-- `aq:location` for Location (geo coordinates)
+- `aq:name` for name, providing :name :first_name :last_name and additionally :middle_name will be available in :extra
+- `email` providing :email and additionally :email_verified will be available in :extra
+- `phone` providing :phone and additionally :phone_type and :phone_number_verified will be available in :extra
+- `address` providing :location with the following format: XXX
+- `aq:location` providing :geolocation (geo coordinates and address from a reverse lookup) with the following format: XXX
 - `aq:push` to request permission to sign in via Push Notifications in the Authentiq ID app
+
+:locale and :zoneinfo will be available in :extra regardless of the requested scopes. The format of these strings is:
+- locale XXX
+- zoneinfo XXX
 
 Append `~r` to a scope to explicitly require it from the user.
 
