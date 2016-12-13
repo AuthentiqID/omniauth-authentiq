@@ -27,7 +27,7 @@ end
 
 Authentiq gives you the capability to request certain data like name, email and address from the Authentiq ID app.
 After the user consents, this information will be shared during authentication.
-Requesting specific information or "scopes" as done by adding the scope parameters to the basic usage.
+Requesting specific information or "scopes" is done by adding the scope parameters to the basic usage.
 
 Depending on your implementation, you may also need to declare the redirect_uri parameter
 
