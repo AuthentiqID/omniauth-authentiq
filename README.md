@@ -1,7 +1,7 @@
 # OmniAuth Authentiq
 
-Official OmniAuth strategy for authenticating with an  Authentiq ID mobile app.
-Sign up for [Authentiq](https://www.authentiq.com/register/?utm_source=github&utm_medium=readme&utm_campaign=omniauth) to obtain your application credentials.
+Official [OmniAuth](https://github.com/omniauth/omniauth/wiki) strategy for authenticating with an  Authentiq ID mobile app ([iOS](https://itunes.apple.com/us/app/authentiq-id/id964932341),  [Android](https://play.google.com/store/apps/details?id=com.authentiq.authentiqid)).
+Application credentials can be obtained [at Authentiq](https://www.authentiq.com/register/?utm_source=github&utm_medium=readme&utm_campaign=omniauth).
 
 ## Installation
 
@@ -19,23 +19,25 @@ Then bundle:
 
 ```ruby
 use OmniAuth::Builder do
-  provider :authentiq, ENV['AUTHENTIQ_KEY'], ENV['AUTHENTIQ_SECRET']
+  provider :authentiq, ENV['AUTHENTIQ_KEY'], ENV['AUTHENTIQ_SECRET'],
+           scope: 'aq:name email~rs aq:push'
 end
 ```
 
 # Scopes
 
-Authentiq gives you the capability to request certain data like name, email and address from the Authentiq ID app.
-After the user consents, this information will be shared during authentication.
-Requesting specific information or "scopes" is done by adding the scope parameters to the basic usage.
+Authentiq adds the capability to request personal information like name, email, phone number, and address from the Authentiq ID app ([iOS](https://itunes.apple.com/us/app/authentiq-id/id964932341),  [Android](https://play.google.com/store/apps/details?id=com.authentiq.authentiqid)).
+During authentication, and only after the user consents, this information will be shared by the Authentiq ID app.
 
-Depending on your implementation, you may also need to declare the redirect_uri parameter
+Requesting specific information or "scopes" is done by modifying the `scope` parameter in the basic usage example above.
+Depending on your implementation, you may also need to provide the `redirect_uri` parameter. 
 
+Example:
 ```ruby
 use OmniAuth::Builder do
   provider :authentiq, ENV['AUTHENTIQ_KEY'], ENV['AUTHENTIQ_SECRET'], 
            scope: 'aq:name email~rs aq:push phone address',
-           redirect_uri: 'redirect_uri'
+           redirect_uri: '<REDIRECT_URI>'
 end
 ```
 
@@ -44,14 +46,14 @@ Available scopes are:
 - `email` for Email
 - `phone` for Phone
 - `address` for Address
-- `aq:location` for Location (Coordinates and geolocated address)
+- `aq:location` for Location (geo coordinates)
 - `aq:push` to request permission to sign in via Push Notifications in the Authentiq ID app
 
 Append `~r` to a scope to explicitly require it from the user.
 
 Append `~s` to phone or email scope to explicitly require a verified (signed) scope.
 
-The `~s` and `~r` can be combined to `~rs` to indicate that the scope is both required and should be verified.
+The `~s` and `~r` can be combined to `~rs` to indicate that the scope is both required and should be / have been verified.
 
 
 ## Tests
