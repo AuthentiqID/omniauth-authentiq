@@ -24,7 +24,7 @@ use OmniAuth::Builder do
 end
 ```
 
-# Scopes
+# Scopes and redirect uri configuration
 
 Authentiq adds the capability to request personal information like name, email, phone number, and address from the Authentiq ID app ([iOS](https://itunes.apple.com/us/app/authentiq-id/id964932341),  [Android](https://play.google.com/store/apps/details?id=com.authentiq.authentiqid)).
 During authentication, and only after the user consents, this information will be shared by the Authentiq ID app.
@@ -42,10 +42,10 @@ end
 ```
 
 Available scopes are: 
-- `aq:name` for name, providing :name :first_name :last_name and additionally :middle_name will be available in :extra
-- `email` providing :email and additionally :email_verified will be available in :extra
-- `phone` providing :phone and additionally :phone_type and :phone_number_verified will be available in :extra
-- `address` providing :location with the following format: 
+- `aq:name` for name, providing `:name`, `:first_name`, `:last_name` and additionally `:middle_name` will be available in `:extra`
+- `email` providing `:email` and additionally `:email_verified` will be available in `:extra`
+- `phone` providing `:phone` and additionally `:phone_type` and `:phone_number_verified` will be available in `:extra`
+- `address` providing `:location` with the following format: 
 ```ruby
 "location" => {
     "country" => "Country",
@@ -56,7 +56,7 @@ Available scopes are:
     "street_address" => "Street"
 }
 ```
-- `aq:location` providing :geolocation (geo coordinates and address from a reverse lookup) with the following format: 
+- `aq:location` providing `:geolocation` (geo coordinates and address from a reverse lookup) with the following format: 
 ```ruby
 "geolocation" => {
     "accuracy" => 20.509,
@@ -75,9 +75,9 @@ Available scopes are:
 ```
 - `aq:push` to request permission to sign in via Push Notifications in the Authentiq ID app
 
-:locale and :zoneinfo will be available in :extra regardless of the requested scopes. The format of these strings is:
-- locale providing locale in the language_territory format
-- zoneinfo providing zoneinfo in the Continent/City format
+`:locale` and `:zoneinfo` will be available in `:extra` regardless of the requested scopes. The format of these strings is:
+- `locale` providing `:locale` in the `language_territory` format
+- `zoneinfo` providing `:zoneinfo` in the `Continent/City` format
 
 Append `~r` to a scope to explicitly require it from the user.
 
@@ -133,7 +133,7 @@ An example complete response, in the form of a ruby hash, after requesting all p
         "phone_type" => "mobile",
         "phone_number_verified" => true,
         "locale" => "language_territory", #eg en_US
-            "zoneinfo" => "Continent/City", #eg Europe / Amsterdam
+        "zoneinfo" => "Continent/City" #eg Europe / Amsterdam
     }
 }
 ```
