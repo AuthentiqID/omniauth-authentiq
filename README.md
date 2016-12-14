@@ -48,30 +48,30 @@ Available scopes are:
 - `address` providing :location with the following format: 
 ```ruby
 "location" => {
-            "country" => "Country",
-            "formatted" => "Street\nCity\nPostal Code\nState\nCountry",
-            "locality" => "City",
-            "postal_code" => "Postal Code",
-            "state" => "State",
-            "street_address" => "Street"
-        }
+    "country" => "Country",
+    "formatted" => "Street\nCity\nPostal Code\nState\nCountry",
+    "locality" => "City",
+    "postal_code" => "Postal Code",
+    "state" => "State",
+    "street_address" => "Street"
+}
 ```
 - `aq:location` providing :geolocation (geo coordinates and address from a reverse lookup) with the following format: 
 ```ruby
 "geolocation" => {
-            "accuracy" => 20.509,
-            "address" => {
-                "country" => "Geo country",
-                "formatted" => "Geo street\nGeo city\nGeo postal_code\nGeo country",
-                "locality" => "Geo city",
-                "postal_code" => "Geo postal_code",
-                "street_address" => "Geo street"
-            },
-            "altitude" => 0.0,
-            "latitude" => 55.340157,
-            "longitude" => -30.555491,
-            "speed" => 0.0
-        }
+    "accuracy" => 20.509,
+    "address" => {
+        "country" => "Geo country",
+        "formatted" => "Geo street\nGeo city\nGeo postal_code\nGeo country",
+        "locality" => "Geo city",
+        "postal_code" => "Geo postal_code",
+        "street_address" => "Geo street"
+    },
+    "altitude" => 0.0,
+    "latitude" => 55.340157,
+    "longitude" => -30.555491,
+    "speed" => 0.0
+}
 ```
 - `aq:push` to request permission to sign in via Push Notifications in the Authentiq ID app
 
@@ -132,8 +132,8 @@ An example complete response, in the form of a ruby hash, after requesting all p
         "email_verified" => true,
         "phone_type" => "mobile",
         "phone_number_verified" => true,
-        "locale" => "language_territory", # eg en_US
-        "zoneinfo" => "Continent/City", # eg Europe/Amsterdam
+        "locale" => "language_territory", #eg en_US
+            "zoneinfo" => "Continent/City", #eg Europe / Amsterdam
     }
 }
 ```
