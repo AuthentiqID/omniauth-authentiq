@@ -45,13 +45,39 @@ Available scopes are:
 - `aq:name` for name, providing :name :first_name :last_name and additionally :middle_name will be available in :extra
 - `email` providing :email and additionally :email_verified will be available in :extra
 - `phone` providing :phone and additionally :phone_type and :phone_number_verified will be available in :extra
-- `address` providing :location with the following format: XXX
-- `aq:location` providing :geolocation (geo coordinates and address from a reverse lookup) with the following format: XXX
+- `address` providing :location with the following format: 
+```ruby
+"location" => {
+            "country" => "Country",
+            "formatted" => "Street\nCity\nPostal Code\nState\nCountry",
+            "locality" => "City",
+            "postal_code" => "Postal Code",
+            "state" => "State",
+            "street_address" => "Street"
+        }
+```
+- `aq:location` providing :geolocation (geo coordinates and address from a reverse lookup) with the following format: 
+```ruby
+"geolocation" => {
+            "accuracy" => 20.509,
+            "address" => {
+                "country" => "Geo country",
+                "formatted" => "Geo street\nGeo city\nGeo postal_code\nGeo country",
+                "locality" => "Geo city",
+                "postal_code" => "Geo postal_code",
+                "street_address" => "Geo street"
+            },
+            "altitude" => 0.0,
+            "latitude" => 55.340157,
+            "longitude" => -30.555491,
+            "speed" => 0.0
+        }
+```
 - `aq:push` to request permission to sign in via Push Notifications in the Authentiq ID app
 
 :locale and :zoneinfo will be available in :extra regardless of the requested scopes. The format of these strings is:
-- locale XXX
-- zoneinfo XXX
+- locale providing locale in the language_territory format
+- zoneinfo providing zoneinfo in the Continent/City format
 
 Append `~r` to a scope to explicitly require it from the user.
 
@@ -59,8 +85,8 @@ Append `~s` to phone or email scope to explicitly require a verified (signed) sc
 
 The `~s` and `~r` can be combined to `~rs` to indicate that the scope is both required and should be / have been verified.
 
-# Response
-An example response, in the form of a ruby hash, after requesting all possible scopes would be
+# Response data
+An example complete response, in the form of a ruby hash, after requesting all possible scopes would be
 
 ```ruby
 {
