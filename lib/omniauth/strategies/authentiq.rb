@@ -36,7 +36,7 @@ module OmniAuth
             :email => (@raw_info['email'] unless @raw_info['email'].nil?),
             :phone => (@raw_info['phone_number'] unless @raw_info['phone_number'].nil?),
             :location => (@raw_info['address'] unless @raw_info['address'].nil?),
-            :geolocation => (@raw_info['location'] unless @raw_info['location'].nil?)
+            :geolocation => (@raw_info['aq:location'] unless @raw_info['aq:location'].nil?)
         }.reject { |k, v| v.nil? }
       end
 
@@ -46,7 +46,8 @@ module OmniAuth
             :email_verified => (@raw_info['email_verified'] unless @raw_info['email_verified'].nil?),
             :phone_type => (@raw_info['phone_type'] unless @raw_info['phone_type'].nil?),
             :phone_number_verified => (@raw_info['phone_number_verified'] unless @raw_info['phone_number_verified'].nil?),
-            :locale => (@raw_info['locale'] unless @raw_info['locale'].nil?)
+            :locale => (@raw_info['locale'] unless @raw_info['locale'].nil?),
+            :zoneinfo => (@raw_info['zoneinfo'] unless @raw_info['zoneinfo'].nil?)
         }.reject { |k, v| v.nil? }
       end
 
