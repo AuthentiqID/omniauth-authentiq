@@ -86,7 +86,7 @@ Append `~s` to phone or email scope to explicitly require a verified (signed) sc
 The `~s` and `~r` can be combined to `~rs` to indicate that the scope is both required and should be / have been verified.
 
 # Response data
-An example complete response, in the form of a ruby hash, after requesting all possible scopes would be
+An example complete response, in the form of a ruby hash, after requesting all possible scopes would be:
 
 ```ruby
 {
@@ -133,7 +133,7 @@ An example complete response, in the form of a ruby hash, after requesting all p
         "phone_type" => "mobile",
         "phone_number_verified" => true,
         "locale" => "language_territory", #eg en_US
-        "zoneinfo" => "Continent/City" #eg Europe / Amsterdam
+        "zoneinfo" => "Continent/City" #eg Europe/Amsterdam
     }
 }
 ```
