@@ -1,7 +1,8 @@
 # OmniAuth Authentiq
 
 Official [OmniAuth](https://github.com/omniauth/omniauth/wiki) strategy for authenticating with an  Authentiq ID mobile app ([iOS](https://itunes.apple.com/us/app/authentiq-id/id964932341),  [Android](https://play.google.com/store/apps/details?id=com.authentiq.authentiqid)).
-Application credentials can be obtained [at Authentiq](https://www.authentiq.com/register/?utm_source=github&utm_medium=readme&utm_campaign=omniauth).
+
+Application credentials (YOUR_CLIENT_ID and YOUR_CLIENT_SECRET below) can be obtained [at Authentiq](https://www.authentiq.com/register/?utm_source=github&utm_medium=readme&utm_campaign=omniauth).
 
 ## Installation
 
@@ -19,7 +20,7 @@ Then bundle:
 
 ```ruby
 use OmniAuth::Builder do
-  provider :authentiq, ENV['AUTHENTIQ_KEY'], ENV['AUTHENTIQ_SECRET'],
+  provider :authentiq, ENV['YOUR_CLIENT_ID'], ENV['YOUR_CLIENT_SECRET'],
            scope: 'aq:name email~rs aq:push'
 end
 ```
@@ -35,9 +36,9 @@ Depending on your implementation, you may also need to provide the `redirect_uri
 Example:
 ```ruby
 use OmniAuth::Builder do
-  provider :authentiq, ENV['AUTHENTIQ_KEY'], ENV['AUTHENTIQ_SECRET'], 
+  provider :authentiq, ENV['YOUR_CLIENT_ID'], ENV['YOUR_CLIENT_SECRET'], 
            scope: 'aq:name email~rs aq:push phone address',
-           redirect_uri: '<REDIRECT_URI>'
+           redirect_uri: 'YOUR_REDIRECT_URI'
 end
 ```
 
