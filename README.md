@@ -31,7 +31,7 @@ Authentiq adds the capability to request personal information like name, email, 
 During authentication, and only after the user consents, this information will be shared by the Authentiq ID app.
 
 Requesting specific information or "scopes" is done by modifying the `scope` parameter in the basic usage example above.
-Depending on your implementation, you may also need to provide the `redirect_uri` parameter. 
+Depending on your implementation, you may also need to provide the `redirect_uri` parameter for the [Redirection Endpoint](https://tools.ietf.org/html/rfc6749#section-3.1.2) where the user should be redirected to after authentication.
 
 Example:
 ```ruby
