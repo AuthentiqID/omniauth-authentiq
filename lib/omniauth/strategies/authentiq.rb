@@ -3,6 +3,8 @@ require 'omniauth-oauth2'
 module OmniAuth
   module Strategies
     class Authentiq < OmniAuth::Strategies::OAuth2
+      autoload :BackChannelLogoutRequest, 'omniauth/strategies/oidc/back_channel_logout_request'
+
       #Set the base URL
       BASE_URL = 'https://connect.authentiq.io/'
 
@@ -17,7 +19,7 @@ module OmniAuth
       }
 
       # Get options from parameters
-      option :authorize_options, [:scope, :display]
+      option :authorize_options, [:scope]
 
       # These are called after authentication has succeeded. If
       # possible, you should try to set the UID without making
@@ -53,6 +55,8 @@ module OmniAuth
 
       def raw_info
         @raw_info ||= access_token.get('/userinfo').parsed
+        request.update_param('user_id', @raw_info['sub'])
+        @raw_info
       end
 
       # Over-ride callback_url definition to maintain
@@ -63,6 +67,29 @@ module OmniAuth
         # Fixes regression in omniauth-oauth2 v1.4.0 by https://github.com/intridea/omniauth-oauth2/commit/85fdbe117c2a4400d001a6368cc359d88f40abc7
         options[:callback_url] || (full_host + script_name + callback_path)
       end
+
+      # override callback phase to check if this is a logout request
+      def callback_phase
+        should_sign_out? ? sign_out_phase : super
+      end
+
+      def should_sign_out?
+        request.post? && request.params.has_key?('logout_token')
+      end
+
+      # it indeed is a sign out request so proceed with a sign out if it is enabled in the options
+      def sign_out_phase
+        if options[:enable_remote_sign_out]
+          backchannel_logout_request.new(self, request).call(options)
+        end
+      end
+
+      private
+
+      def backchannel_logout_request
+        BackChannelLogoutRequest
+      end
+
     end
   end
 end

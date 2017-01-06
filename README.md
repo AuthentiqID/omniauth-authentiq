@@ -20,7 +20,8 @@ Then bundle:
 ```ruby
 use OmniAuth::Builder do
   provider :authentiq, ENV['AUTHENTIQ_KEY'], ENV['AUTHENTIQ_SECRET'],
-           scope: 'aq:name email~rs aq:push'
+           scope: 'aq:name email~rs aq:push',
+           enable_remote_sign_out: false
 end
 ```
 
@@ -37,7 +38,7 @@ Example:
 use OmniAuth::Builder do
   provider :authentiq, ENV['AUTHENTIQ_KEY'], ENV['AUTHENTIQ_SECRET'], 
            scope: 'aq:name email~rs aq:push phone address',
-           redirect_uri: '<REDIRECT_URI>'
+           enable_remote_sign_out: false
 end
 ```
 
@@ -92,6 +93,7 @@ An example complete response, in the form of a ruby hash, after requesting all p
 {
     "provider" => "authentiq",
     "uid" => "E1YcKg143eO6Z-e-3vK1GBJEGpKlIpX1-BbeA3GY6II",
+    "sid" => "E1YcKg143eO6Z-e-3vK1GBJEGpKlIpX1-BbeA3GY6II"
     "info" => {
         "name" => "First Middle Last",
         "first_name" => "First",
@@ -138,6 +140,106 @@ An example complete response, in the form of a ruby hash, after requesting all p
 }
 ```
 
+## Remote Logout (Backchannel-logout)
+Authentiq Omniauth strategy provides the ability to log out remotely via the Authentiq ID app by providing a proc/lambda for the `enable_remote_sign_out` option.
+
+To test the remote logout functionality in Rails under a development environment you need to enable rails caching for development environment
+
+#### Example with Devise and Omniauth-Authentiq ([demo](https://devise-omniauth-demo.herokuapp.com))
+
+Add Authentiq configuration  and the relevant proc/lambda (to check and delete the Authentiq session when a logout request arrives) in the `config/initializers/devise.rb` file
+```ruby
+config.omniauth :authentiq, ENV["AUTHENTIQ_APP_ID"], ENV["AUTHENTIQ_APP_SECRET"], 
+                {
+                scope: 'aq:name email~rs address phone aq:push',
+                enable_remote_sign_out: (
+                    lambda do |request|
+                      if Rails.cache.read("application_name:#{:authentiq}:#{request.params['sid']}").present?
+                        Rails.cache.delete("application_name:#{:authentiq}:#{request.params['sid']}")
+                        true
+                      else
+                        false
+                      end
+                    end
+                  )
+                }
+```
+Add a check to save the session in the `authentiq` function that should exist in the  `app/controllers/users/omniauth_callbacks_controller.rb` file as suggested by [Devise](https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview) when using it in conjunction with omniauth (single or multiple providers)
+```ruby
+    if params['sid']
+      Rails.cache.write("application_name:#{:authentiq}:#{params['sid']}", params['sid'], expires_in: 28800)
+      session[:authentiq_tickets] ||= {}
+      session[:authentiq_tickets][:authentiq] = params['sid']
+    end
+```
+
+Add an action to validate the Authentiq session on the `app/controllers/application_controller.rb` file
+```ruby
+  before_action :validate_authentiq_session!
+  protect_from_forgery with: :exception
+
+  def validate_authentiq_session!
+    return unless signed_in? && session[:authentiq_tickets]
+
+    valid = session[:authentiq_tickets].all? do |provider, session|
+      Rails.cache.read("application_name:#{provider}:#{session}").present?
+    end
+
+    unless valid
+      session[:authentiq_tickets] = nil
+      sign_out current_user
+      redirect_to new_user_session_path
+    end
+  end
+```
+
+ 
+#### Example only with Omniauth-Authentiq ([demo](https://just-omniauth-demo.herokuapp.com/))
+Add Authentiq configuration  and the relevant proc/lambda (to check and delete the Authentiq session when a logout request arrives) in the `config/initializers/omniauth.rb` file.
+```ruby
+  provider :authentiq, ENV["AUTHENTIQ_APP_ID"], ENV["AUTHENTIQ_APP_SECRET"],
+           {
+              scope: 'aq:name email~rs aq:push phone address',
+              enable_remote_sign_out: (
+                lambda do |request|
+                  if Rails.cache.read("application_name:#{:authentiq}:#{request.params['sid']}").present?
+                    Rails.cache.delete("application_name:#{:authentiq}:#{request.params['sid']}")
+                    true
+                  else
+                    false
+                  end
+                end
+              )
+           }
+
+```
+Add a check to save the session in the function that creates the session in the  `app/controllers/sessions_controller.rb` file
+```ruby
+    if params['sid']
+      Rails.cache.write("application_name:#{:authentiq}:#{params['sid']}", params['sid'], expires_in: 28800)
+      session[:authentiq_tickets] ||= {}
+      session[:authentiq_tickets][:authentiq] = params['sid']
+    end
+```
+Add an action to validate the Authentiq session on the `app/controllers/application_controller.rb` file
+```ruby
+  before_action :validate_authentiq_session!
+  protect_from_forgery with: :exception
+
+  def validate_authentiq_session!
+    return unless current_user && session[:service_tickets]
+
+    valid = session[:service_tickets].all? do |provider, ticket|
+      Rails.cache.read("omnivise:#{provider}:#{ticket}").present?
+    end
+
+    unless valid
+      session[:service_tickets] = nil
+      reset_session
+      redirect_to root_path
+    end
+  end
+```
 
 ## Tests
 
@@ -145,4 +247,4 @@ Tests are coming soon.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/AuthentiqID/omniauth-authentiq.
+Bug reports and pull requests are welcome [here](https://github.com/AuthentiqID/omniauth-authentiq)
