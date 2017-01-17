@@ -16,13 +16,13 @@ module OmniAuth
             # to actually happen
             # a proc must be set in the devise.rb initializer of the rails app
             result = sign_out_callback.call(*back_channel_logout_request)
-          rescue
-            return backchannel_logout_response(400, ['Bad request']).finish
+          rescue StandardError => err
+            result = back_channel_logout_response(400, [err.to_s])
           else
             if result
-              result = backchannel_logout_response(200, ['OK'])
+              result = back_channel_logout_response(200, ['Logout succeeded'])
             else
-              result = backchannel_logout_response(501, ['Not implemented'])
+              result = back_channel_logout_response(501, ['Authentiq session does not exist'])
             end
           ensure
             return unless result
@@ -40,23 +40,30 @@ module OmniAuth
         end
 
         def decode_logout_token(logout_token)
-            logout_jwt = JWT.decode logout_token, @options.client_secret, true, {:algorithm => 'HS256'}
-            if validate_logout_token(logout_jwt)
-              @request.update_param('user_id', logout_jwt[0]['sub'])
+          begin
+            logout_jwt = JWT.decode logout_token, @options.client_secret, true, {
+                :algorithm => algorithm,
+                :iss => issuer,
+                :verify_iss => true,
+                :aud => @options.client_id,
+                :verify_aud => true,
+                :verify_iat => true,
+                :verify_jti => true,
+                :verify_sub => true,
+                :leeway => 60
+            }
+            if validate_logout_token(logout_jwt[0])
+              @request.update_param('sid', logout_jwt[0]['sid'])
             end
+          end
         end
 
         def validate_logout_token(logout_jwt)
           valid = false
           begin
-            if logout_jwt[0].key?('iss') &&
-                logout_jwt[0].key?('sub') &&
-                logout_jwt[0].key?('aud') &&
-                logout_jwt[0].key?('iat') &&
-                logout_jwt[0].key?('jti') &&
-                logout_jwt[0].key?('events') &&
-                logout_jwt[0]['events'][0] == 'http://schemas.openid.net/event/backchannel-logout' &&
-                !logout_jwt[0].key?('nonce')
+            if logout_jwt.key?('events') &&
+                logout_jwt['events'][0] == 'http://schemas.openid.net/event/backchannel-logout' &&
+                !logout_jwt.key?('nonce')
               valid = true
             end
             valid
@@ -67,13 +74,26 @@ module OmniAuth
           @options[:enable_remote_sign_out]
         end
 
-        def backchannel_logout_response(code, body)
+        def back_channel_logout_response(code, body)
           response = Rack::Response.new
           response.status = code
           response['Cache-Control'] = 'no-cache, no-store'
           response['Pragma'] = 'no-cache'
+          response.headers['Content-Type'] = 'text/plain; charset=utf-8'
           response.body = body
           response
+        end
+
+        def issuer
+          @options.issuer.nil? ? 'https://connect.authentiq.io/' : @options.issuer
+        end
+
+        def algorithm
+          if @options.algorithm != nil && (%w(HS256 RS256 ES256).include? @options.client_signed_response_alg)
+            @options.client_signed_response_alg
+          else
+            'HS256'
+          end
         end
       end
     end
