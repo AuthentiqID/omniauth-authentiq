@@ -5,30 +5,26 @@ module OmniAuth
     class Authentiq < OmniAuth::Strategies::OAuth2
       autoload :BackChannelLogoutRequest, 'omniauth/strategies/oidc/back_channel_logout_request'
 
-      #Set the base URL
       BASE_URL = 'https://connect.authentiq.io/'
 
-      # Authentiq strategy name
       option :name, 'authentiq'
 
-      # Build the basic client options (url, authorization url, token url)
       option :client_options, {
           :site => BASE_URL,
           :authorize_url => '/authorize',
-          :token_url => '/token'
+          :token_url => '/token',
+          :info_url => '/userinfo'
       }
 
-      # Get options from parameters
       option :authorize_options, [:scope]
 
       # These are called after authentication has succeeded. If
       # possible, you should try to set the UID without making
-      # additional calls (if the user id is returned with the token
-      # or as a URI parameter). This may not be possible with all
-      # providers.
+      # additional calls (if the user id is returned with the
+      # token or as a URI parameter). This may not be possible
+      # with all providers.
 
-      # Get the user id from raw info
-      uid { raw_info['sub'] }
+      uid { raw_info['uid'] }
 
       info do
         {
@@ -53,35 +49,49 @@ module OmniAuth
         }.reject { |k, v| v.nil? }
       end
 
+      def request_phase
+        add_openid
+        super
+      end
+
       def raw_info
-        @raw_info ||= access_token.get('/userinfo').parsed
-        request.update_param('user_id', @raw_info['sub'])
+        @raw_info ||= decode_idtoken(access_token.params['id_token'])
+        @raw_info['uid'] = access_token.get(user_info_endpoint).parsed['sub']
+        request.update_param('sid', @raw_info['sid'])
         @raw_info
       end
 
-      # Over-ride callback_url definition to maintain
-      # compatibility with omniauth-oauth2 >= 1.4.0
-      #
-      # See: https://github.com/intridea/omniauth-oauth2/issues/81
       def callback_url
-        # Fixes regression in omniauth-oauth2 v1.4.0 by https://github.com/intridea/omniauth-oauth2/commit/85fdbe117c2a4400d001a6368cc359d88f40abc7
         options[:callback_url] || (full_host + script_name + callback_path)
       end
 
-      # override callback phase to check if this is a logout request
       def callback_phase
         should_sign_out? ? sign_out_phase : super
+      end
+
+      def add_openid
+        unless options.scope.split.include? 'openid'
+          options.scope = options.scope.split.push('openid').join(' ')
+        end
+      end
+
+      def decode_idtoken(idtoken)
+        @info = JWT.decode idtoken, nil, false
+        @info[0]
       end
 
       def should_sign_out?
         request.post? && request.params.has_key?('logout_token')
       end
 
-      # it indeed is a sign out request so proceed with a sign out if it is enabled in the options
       def sign_out_phase
         if options[:enable_remote_sign_out]
           backchannel_logout_request.new(self, request).call(options)
         end
+      end
+
+      def user_info_endpoint
+        @options.client_options[:info_url]
       end
 
       private
@@ -89,7 +99,6 @@ module OmniAuth
       def backchannel_logout_request
         BackChannelLogoutRequest
       end
-
     end
   end
 end

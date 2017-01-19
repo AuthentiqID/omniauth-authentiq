@@ -11,9 +11,7 @@ module OmniAuth
           @options = options
 
           begin
-            # for
-            # sign_out_callback.call(*back_channel_logout_request)
-            # to actually happen
+            # for sign_out_callback.call(*back_channel_logout_request) to execute
             # a proc must be set in the devise.rb initializer of the rails app
             result = sign_out_callback.call(*back_channel_logout_request)
           rescue StandardError => err
