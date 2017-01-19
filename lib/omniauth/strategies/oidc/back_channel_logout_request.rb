@@ -50,7 +50,7 @@ module OmniAuth
                 :verify_sub => true,
                 :leeway => 60
             }
-            if validate_logout_token(logout_jwt[0])
+            if validate_events(logout_jwt[0]) && validate_nonce(logout_jwt[0])
               @request.update_param('sid', logout_jwt[0]['sid'])
             else
               raise 'Logout JWT missing events claim or nonce claim is present'
@@ -58,10 +58,14 @@ module OmniAuth
           end
         end
 
-        def validate_logout_token(logout_jwt)
+        def validate_events(logout_jwt)
           logout_jwt.key?('events') &&
-              logout_jwt['events'][0] == 'http://schemas.openid.net/event/backchannel-logout' &&
-              !logout_jwt.key?('nonce')
+              (logout_jwt['events'][0] == 'http://schemas.openid.net/event/backchannel-logout' ||
+                  logout_jwt['events']['http://schemas.openid.net/event/backchannel-logout'].empty?)
+        end
+
+        def validate_nonce(logout_jwt)
+          !logout_jwt.key?('nonce')
         end
 
         def sign_out_callback
