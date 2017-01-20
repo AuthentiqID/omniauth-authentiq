@@ -61,7 +61,7 @@ module OmniAuth
         def validate_events(logout_jwt)
           logout_jwt.key?('events') &&
               (logout_jwt['events'][0] == 'http://schemas.openid.net/event/backchannel-logout' ||
-                  logout_jwt['events']['http://schemas.openid.net/event/backchannel-logout'].empty?)
+                  logout_jwt['events'].key?('http://schemas.openid.net/event/backchannel-logout'))
         end
 
         def validate_nonce(logout_jwt)
