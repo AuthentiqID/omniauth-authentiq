@@ -12,8 +12,7 @@ module OmniAuth
       option :client_options, {
           :site => BASE_URL,
           :authorize_url => '/authorize',
-          :token_url => '/token',
-          :info_url => '/userinfo'
+          :token_url => '/token'
       }
 
       option :authorize_options, [:scope]
@@ -24,7 +23,7 @@ module OmniAuth
       # token or as a URI parameter). This may not be possible
       # with all providers.
 
-      uid { raw_info['uid'] }
+      uid { raw_info['sub'] }
 
       info do
         {
@@ -56,7 +55,6 @@ module OmniAuth
 
       def raw_info
         @raw_info ||= decode_idtoken(access_token.params['id_token'])
-        @raw_info['uid'] = access_token.get(user_info_endpoint).parsed['sub']
         request.update_param('sid', @raw_info['sid'])
         @raw_info
       end
@@ -76,8 +74,8 @@ module OmniAuth
       end
 
       def decode_idtoken(idtoken)
-        @info = JWT.decode idtoken, nil, false
-        @info[0]
+        @jwt_info = JWT.decode idtoken, nil, false
+        @jwt_info[0]
       end
 
       def should_sign_out?
@@ -88,10 +86,6 @@ module OmniAuth
         if options[:enable_remote_sign_out]
           backchannel_logout_request.new(self, request).call(options)
         end
-      end
-
-      def user_info_endpoint
-        @options.client_options[:info_url]
       end
 
       private
