@@ -50,10 +50,10 @@ module OmniAuth
                 :verify_sub => true,
                 :leeway => 60
             }
-            if validate_events(logout_jwt[0]) && validate_nonce(logout_jwt[0])
+            if validate_events(logout_jwt[0]) && validate_nonce(logout_jwt[0]) && validate_sid(logout_jwt[0])
               @request.update_param('sid', logout_jwt[0]['sid'])
             else
-              raise 'Logout JWT missing events claim or nonce claim is present'
+              raise 'Logout JWT validation failed. Missing session, events claim or nonce claim is present'
             end
           end
         end
@@ -70,6 +70,10 @@ module OmniAuth
 
         def sign_out_callback
           @options[:enable_remote_sign_out]
+        end
+
+        def validate_sid(logout_jwt)
+          logout_jwt.key?('sid')
         end
 
         def back_channel_logout_response(code, body)
