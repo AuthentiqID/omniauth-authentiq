@@ -11,8 +11,6 @@ module OmniAuth
           @options = options
 
           begin
-            # for sign_out_callback.call(*back_channel_logout_request) to execute
-            # a proc must be set in the devise.rb initializer of the rails app
             result = sign_out_callback.call(*back_channel_logout_request)
           rescue StandardError => err
             result = back_channel_logout_response(400, [err.to_s])
@@ -69,7 +67,14 @@ module OmniAuth
         end
 
         def sign_out_callback
-          @options[:enable_remote_sign_out]
+          if @options.has_key?(:remote_sign_out_handler) && (@options[:remote_sign_out_handler].respond_to? :call)
+            @options[:remote_sign_out_handler]
+          else
+            OmniAuth::logger.send(:warn, 'It look like remote logout is configured on your Authentiq client but \':remote_sign_out_handler\' is not implemented on devise or omniauth')
+            raise 'Remote sign out failed because the client\'s \':remote_sign_out_handler\' is not implemented on devise or omniauth'
+          end
+
+
         end
 
         def validate_sid(logout_jwt)

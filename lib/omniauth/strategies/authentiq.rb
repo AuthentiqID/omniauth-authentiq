@@ -83,9 +83,7 @@ module OmniAuth
       end
 
       def sign_out_phase
-        if options[:enable_remote_sign_out]
-          backchannel_logout_request.new(self, request).call(options)
-        end
+        backchannel_logout_request.new(self, request).call(options)
       end
 
       private
