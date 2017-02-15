@@ -92,7 +92,7 @@ module OmniAuth
         end
 
         def issuer
-          @options.issuer.nil? ? 'https://connect.authentiq.io/' : @options.issuer
+          @options.client_options.jwt_issuer.nil? ? @options.client_options.site : @options.client_options.jwt_issuer
         end
 
         def algorithm
