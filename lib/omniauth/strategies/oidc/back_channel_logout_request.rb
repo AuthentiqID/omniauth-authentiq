@@ -1,3 +1,5 @@
+require_relative '../helpers/helpers'
+
 module OmniAuth
   module Strategies
     class Authentiq
@@ -38,7 +40,7 @@ module OmniAuth
         def decode_logout_token(logout_token)
           begin
             logout_jwt = JWT.decode logout_token, @options.client_secret, true, {
-                :algorithm => algorithm,
+                :algorithm => helpers.algorithm(@options),
                 :iss => @options.client_options.site,
                 :verify_iss => true,
                 :aud => @options.client_id,
@@ -87,12 +89,8 @@ module OmniAuth
           response
         end
 
-        def algorithm
-          if @options.algorithm != nil && (%w(HS256 RS256 ES256).include? @options.client_signed_response_alg)
-            @options.client_signed_response_alg
-          else
-            'HS256'
-          end
+        def helpers
+          Helpers
         end
       end
     end

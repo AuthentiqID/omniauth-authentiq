@@ -1,5 +1,5 @@
 require 'omniauth-oauth2'
-
+require_relative 'helpers/helpers'
 module OmniAuth
   module Strategies
     class Authentiq < OmniAuth::Strategies::OAuth2
@@ -70,8 +70,17 @@ module OmniAuth
       end
 
       def decode_idtoken(idtoken)
-        @jwt_info = JWT.decode idtoken, nil, false
-        @jwt_info[0]
+        (JWT.decode idtoken, @options.client_secret, true, {
+            :algorithm => helpers.algorithm(@options),
+            :iss => @options.client_options.site,
+            :verify_iss => true,
+            :aud => @options.client_id,
+            :verify_aud => true,
+            :verify_iat => true,
+            :verify_jti => false,
+            :verify_sub => true,
+            :leeway => 60
+        })[0]
       end
 
       def should_sign_out?
@@ -86,6 +95,10 @@ module OmniAuth
 
       def backchannel_logout_request
         BackChannelLogoutRequest
+      end
+
+      def helpers
+        Helpers
       end
     end
   end
