@@ -14,13 +14,19 @@ module OmniAuth
 
           begin
             result = sign_out_callback.call(*back_channel_logout_request)
-          rescue StandardError => err
-            result = back_channel_logout_response(400, [err.to_s])
+          rescue StandardError, ArgumentError, NotImplementedError => err
+            if err.class.equal?(ArgumentError)
+              result = back_channel_logout_response(400, [err.to_s])
+            elsif err.class.equal?(NotImplementedError)
+              result = back_channel_logout_response(501, [err.to_s])
+            else
+              result = back_channel_logout_response(400, [err.to_s])
+            end
           else
             if result
               result = back_channel_logout_response(200, ['Logout succeeded'])
             else
-              result = back_channel_logout_response(501, ['Authentiq session does not exist'])
+              result = back_channel_logout_response(404, ['Unknown session'])
             end
           ensure
             return unless result
@@ -53,7 +59,7 @@ module OmniAuth
             if validate_events(logout_jwt[0]) && validate_nonce(logout_jwt[0]) && validate_sid(logout_jwt[0])
               @request.update_param('sid', logout_jwt[0]['sid'])
             else
-              raise 'Logout JWT validation failed. Missing session, events claim or nonce claim is present'
+              raise(ArgumentError, 'Logout JWT validation failed. Missing session, events claim or nonce claim is present')
             end
           end
         end
@@ -71,7 +77,7 @@ module OmniAuth
             @options[:remote_sign_out_handler]
           else
             OmniAuth::logger.send(:warn, 'It look like remote logout is configured on your Authentiq client but \':remote_sign_out_handler\' is not implemented on devise or omniauth')
-            raise 'Remote sign out failed because the client\'s \':remote_sign_out_handler\' is not implemented on devise or omniauth'
+            raise(NotImplementedError, 'Remote sign out failed because the client\'s \':remote_sign_out_handler\' is not implemented on devise or omniauth')
           end
         end
 
