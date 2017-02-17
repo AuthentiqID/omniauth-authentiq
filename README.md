@@ -9,7 +9,7 @@ Application credentials (YOUR_CLIENT_ID and YOUR_CLIENT_SECRET below) can be obt
 Add this line to your application's Gemfile
 
 ```ruby
-gem 'omniauth-authentiq', '~> 0.2.5'
+gem 'omniauth-authentiq', '~> 0.3.0'
 ```
 
 Then bundle:
