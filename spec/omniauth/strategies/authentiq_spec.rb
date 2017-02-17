@@ -32,32 +32,32 @@ describe OmniAuth::Strategies::Authentiq do
     end
 
     it 'has correct authorize_url' do
-      expect(subject.client.options[:authorize_url]).to eq('/authorize')
+      expect(subject.client.options[:authorize_url]).to eq('https://connect.authentiq.io/authorize')
     end
 
     it 'has correct token_url' do
-      expect(subject.client.options[:token_url]).to eq('/token')
+      expect(subject.client.options[:token_url]).to eq('https://connect.authentiq.io/token')
     end
 
     describe "overrides" do
       it 'should allow overriding the site' do
-        @options = {:client_options => {'site' => 'https://dev.connect.authentiq.io'}}
-        expect(subject.client.site).to eq('https://dev.connect.authentiq.io')
+        @options = {:client_options => {'site' => 'https://example.com'}}
+        expect(subject.client.site).to eq('https://example.com')
       end
 
       it 'should allow overriding the authorize_url' do
-        @options = {:client_options => {'authorize_url' => '/some-branch/authorize'}}
-        expect(subject.client.options[:authorize_url]).to eq('/some-branch/authorize')
+        @options = {:client_options => {'authorize_url' => 'https://example.com/some-branch/authorize'}}
+        expect(subject.client.options[:authorize_url]).to eq('https://example.com/some-branch/authorize')
       end
 
       it 'should allow overriding the token_url' do
-        @options = {:client_options => {'token_url' => '/some-branch/token'}}
-        expect(subject.client.options[:token_url]).to eq('/some-branch/token')
+        @options = {:client_options => {'token_url' => 'https://example.com/some-branch/token'}}
+        expect(subject.client.options[:token_url]).to eq('https://example.com/some-branch/token')
       end
 
       it 'should allow overriding the jwt_issuer' do
-        @options = {:client_options => {'jwt_issuer' => 'https://dev.connect.authentiq.io/some-branch'}}
-        expect(subject.client.options[:jwt_issuer]).to eq('https://dev.connect.authentiq.io/some-branch')
+        @options = {:client_options => {'jwt_issuer' => 'https://example.com/some-branch'}}
+        expect(subject.client.options[:jwt_issuer]).to eq('https://example.com/some-branch')
       end
     end
   end
