@@ -9,7 +9,7 @@ Application credentials (YOUR_CLIENT_ID and YOUR_CLIENT_SECRET below) can be obt
 Add this line to your application's Gemfile
 
 ```ruby
-gem 'omniauth-authentiq', '~> 0.2.3'
+gem 'omniauth-authentiq', '~> 0.2.5'
 ```
 
 Then bundle:
@@ -21,8 +21,7 @@ Then bundle:
 ```ruby
 use OmniAuth::Builder do
   provider :authentiq, ENV['AUTHENTIQ_KEY'], ENV['AUTHENTIQ_SECRET'],
-           scope: 'aq:name email~rs aq:push',
-           enable_remote_sign_out: false
+           scope: 'aq:name email~rs aq:push'
 end
 ```
 

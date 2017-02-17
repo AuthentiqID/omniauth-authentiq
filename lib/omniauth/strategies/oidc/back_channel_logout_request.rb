@@ -1,3 +1,5 @@
+require_relative '../helpers/helpers'
+
 module OmniAuth
   module Strategies
     class Authentiq
@@ -12,13 +14,19 @@ module OmniAuth
 
           begin
             result = sign_out_callback.call(*back_channel_logout_request)
-          rescue StandardError => err
-            result = back_channel_logout_response(400, [err.to_s])
+          rescue StandardError, ArgumentError, NotImplementedError => err
+            if err.class.equal?(ArgumentError)
+              result = back_channel_logout_response(400, [err.to_s])
+            elsif err.class.equal?(NotImplementedError)
+              result = back_channel_logout_response(501, [err.to_s])
+            else
+              result = back_channel_logout_response(400, [err.to_s])
+            end
           else
             if result
               result = back_channel_logout_response(200, ['Logout succeeded'])
             else
-              result = back_channel_logout_response(501, ['Authentiq session does not exist'])
+              result = back_channel_logout_response(404, ['Unknown session'])
             end
           ensure
             return unless result
@@ -38,8 +46,8 @@ module OmniAuth
         def decode_logout_token(logout_token)
           begin
             logout_jwt = JWT.decode logout_token, @options.client_secret, true, {
-                :algorithm => algorithm,
-                :iss => issuer,
+                :algorithm => helpers.algorithm(@options),
+                :iss => @options.client_options.site,
                 :verify_iss => true,
                 :aud => @options.client_id,
                 :verify_aud => true,
@@ -51,15 +59,13 @@ module OmniAuth
             if validate_events(logout_jwt[0]) && validate_nonce(logout_jwt[0]) && validate_sid(logout_jwt[0])
               @request.update_param('sid', logout_jwt[0]['sid'])
             else
-              raise 'Logout JWT validation failed. Missing session, events claim or nonce claim is present'
+              raise(ArgumentError, 'Logout JWT validation failed. Missing session, events claim or nonce claim is present')
             end
           end
         end
 
         def validate_events(logout_jwt)
-          logout_jwt.key?('events') &&
-              (logout_jwt['events'][0] == 'http://schemas.openid.net/event/backchannel-logout' ||
-                  logout_jwt['events'].key?('http://schemas.openid.net/event/backchannel-logout'))
+          logout_jwt.key?('events') && logout_jwt['events'].key?('http://schemas.openid.net/event/backchannel-logout')
         end
 
         def validate_nonce(logout_jwt)
@@ -71,10 +77,8 @@ module OmniAuth
             @options[:remote_sign_out_handler]
           else
             OmniAuth::logger.send(:warn, 'It look like remote logout is configured on your Authentiq client but \':remote_sign_out_handler\' is not implemented on devise or omniauth')
-            raise 'Remote sign out failed because the client\'s \':remote_sign_out_handler\' is not implemented on devise or omniauth'
+            raise(NotImplementedError, 'Remote sign out failed because the client\'s \':remote_sign_out_handler\' is not implemented on devise or omniauth')
           end
-
-
         end
 
         def validate_sid(logout_jwt)
@@ -91,16 +95,8 @@ module OmniAuth
           response
         end
 
-        def issuer
-          @options.issuer.nil? ? 'https://connect.authentiq.io/' : @options.issuer
-        end
-
-        def algorithm
-          if @options.algorithm != nil && (%w(HS256 RS256 ES256).include? @options.client_signed_response_alg)
-            @options.client_signed_response_alg
-          else
-            'HS256'
-          end
+        def helpers
+          Helpers
         end
       end
     end

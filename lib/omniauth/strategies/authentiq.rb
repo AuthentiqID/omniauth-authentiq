@@ -1,21 +1,17 @@
 require 'omniauth-oauth2'
-
+require_relative 'helpers/helpers'
 module OmniAuth
   module Strategies
     class Authentiq < OmniAuth::Strategies::OAuth2
       autoload :BackChannelLogoutRequest, 'omniauth/strategies/oidc/back_channel_logout_request'
 
-      BASE_URL = 'https://connect.authentiq.io/'
-
       option :name, 'authentiq'
 
       option :client_options, {
-          :site => BASE_URL,
-          :authorize_url => '/authorize',
-          :token_url => '/token'
+          :site => 'https://connect.authentiq.io/',
+          :authorize_url => 'https://connect.authentiq.io/authorize',
+          :token_url => 'https://connect.authentiq.io/token'
       }
-
-      option :authorize_options, [:scope]
 
       # These are called after authentication has succeeded. If
       # possible, you should try to set the UID without making
@@ -74,8 +70,17 @@ module OmniAuth
       end
 
       def decode_idtoken(idtoken)
-        @jwt_info = JWT.decode idtoken, nil, false
-        @jwt_info[0]
+        (JWT.decode idtoken, @options.client_secret, true, {
+            :algorithm => helpers.algorithm(@options),
+            :iss => @options.client_options.site,
+            :verify_iss => true,
+            :aud => @options.client_id,
+            :verify_aud => true,
+            :verify_iat => true,
+            :verify_jti => false,
+            :verify_sub => true,
+            :leeway => 60
+        })[0]
       end
 
       def should_sign_out?
@@ -90,6 +95,10 @@ module OmniAuth
 
       def backchannel_logout_request
         BackChannelLogoutRequest
+      end
+
+      def helpers
+        Helpers
       end
     end
   end
