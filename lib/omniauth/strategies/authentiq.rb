@@ -28,8 +28,8 @@ module OmniAuth
             :last_name => (@raw_info['family_name'] unless @raw_info['family_name'].nil?),
             :email => (@raw_info['email'] unless @raw_info['email'].nil?),
             :phone => (@raw_info['phone_number'] unless @raw_info['phone_number'].nil?),
-            :location => (@raw_info['address'] unless @raw_info['address'].nil?),
-            :geolocation => (@raw_info['aq:location'] unless @raw_info['aq:location'].nil?)
+            :address => (@raw_info['address'] unless @raw_info['address'].nil?),
+            :location => (@raw_info['aq:location'] unless @raw_info['aq:location'].nil?)
         }.reject { |k, v| v.nil? }
       end
 
