@@ -2,7 +2,7 @@
 
 Official [OmniAuth](https://github.com/omniauth/omniauth/wiki) strategy for authenticating with an  Authentiq ID mobile app ([iOS](https://itunes.apple.com/us/app/authentiq-id/id964932341),  [Android](https://play.google.com/store/apps/details?id=com.authentiq.authentiqid)).
 
-Application credentials (YOUR_CLIENT_ID and YOUR_CLIENT_SECRET below) can be obtained [at Authentiq](https://www.authentiq.com/register/?utm_source=github&utm_medium=readme&utm_campaign=omniauth).
+Application credentials (YOUR_CLIENT_ID and YOUR_CLIENT_SECRET below) can be obtained [at Authentiq](https://www.authentiq.com/developers).
 
 ## Installation
 
@@ -29,7 +29,7 @@ You can read the wiki for more extensive infomation on how to use the Authentiq 
 
 * [Homepage](https://github.com/AuthentiqID/omniauth-authentiq/wiki)
 * [Installation and basic usage](https://github.com/AuthentiqID/omniauth-authentiq/wiki/Installation-and-basic-usage)
-* [Scopes, redirect uri configuration and response data](https://github.com/AuthentiqID/omniauth-authentiq/wiki/Scopes,-redirect-URI-configuration-and-responses)
+* [Scopes, redirect uri configuration and response data](https://github.com/AuthentiqID/omniauth-authentiq/wiki/Scopes,-callback-url-configuration-and-responses)
 * [Remote Logout (Backchannel-logout)](https://github.com/AuthentiqID/omniauth-authentiq/wiki/Remote-logout)
 
 ## Tests
