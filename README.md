@@ -2,7 +2,7 @@
 
 Official [OmniAuth](https://github.com/omniauth/omniauth/wiki) strategy for authenticating with an  Authentiq ID mobile app ([iOS](https://itunes.apple.com/us/app/authentiq-id/id964932341),  [Android](https://play.google.com/store/apps/details?id=com.authentiq.authentiqid)).
 
-Application credentials (YOUR_CLIENT_ID and YOUR_CLIENT_SECRET below) can be obtained [at Authentiq](https://www.authentiq.com/developers).
+Application credentials (YOUR_CLIENT_ID and YOUR_CLIENT_SECRET below) can be obtained [at Authentiq](https://www.authentiq.com/developers/?utm_source=github&utm_medium=readme&utm_campaign=omniauth).
 
 ## Installation
 
