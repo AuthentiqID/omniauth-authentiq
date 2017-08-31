@@ -25,7 +25,7 @@ use OmniAuth::Builder do
 end
 ```
 
-You can read the wiki for more extensive infomation on how to use the Authentiq Omniauth strategy for your rails application
+You can read the wiki for more extensive information on how to use the Authentiq Omniauth strategy for your rails application
 
 * [Homepage](https://github.com/AuthentiqID/omniauth-authentiq/wiki)
 * [Installation and basic usage](https://github.com/AuthentiqID/omniauth-authentiq/wiki/Installation-and-basic-usage)
