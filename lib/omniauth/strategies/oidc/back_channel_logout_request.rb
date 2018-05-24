@@ -46,7 +46,10 @@ module OmniAuth
 
         def decode_logout_token(logout_token)
           begin
-            logout_jwt = JWT.decode logout_token, @options.client_secret, true, {
+            logout_jwt = JWT.decode(
+                logout_token,
+                @options.client_secret,
+                true,
                 :algorithm => helpers.algorithm(@options),
                 :iss => @options.client_options.site,
                 :verify_iss => true,
@@ -56,8 +59,8 @@ module OmniAuth
                 :verify_jti => true,
                 :verify_sub => true,
                 :leeway => 60
-            }
-            if validate_events(logout_jwt[0]) && validate_nonce(logout_jwt[0]) && validate_sid(logout_jwt[0])
+            )
+            if validate_events(logout_jwt.first) && validate_nonce(logout_jwt.first) && validate_sid(logout_jwt.first)
               @request.update_param('sid', logout_jwt[0]['sid'])
             else
               raise(ArgumentError, 'Logout JWT validation failed. Missing session, events claim or nonce claim is present')
@@ -77,7 +80,7 @@ module OmniAuth
           if @options.has_key?(:remote_sign_out_handler) && (@options[:remote_sign_out_handler].respond_to? :call)
             @options[:remote_sign_out_handler]
           else
-            OmniAuth::logger.send(:warn, 'It look like remote logout is configured on your Authentiq client but \':remote_sign_out_handler\' is not implemented on devise or omniauth')
+            OmniAuth::logger.send(:warn, 'It looks like remote logout is configured on your Authentiq client but \':remote_sign_out_handler\' is not implemented on devise or omniauth')
             raise(NotImplementedError, 'Remote sign out failed because the client\'s \':remote_sign_out_handler\' is not implemented on devise or omniauth')
           end
         end

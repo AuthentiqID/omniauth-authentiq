@@ -72,7 +72,10 @@ module OmniAuth
       end
 
       def decode_idtoken(idtoken)
-        (JWT.decode idtoken, @options.client_secret, true, {
+        ::JWT.decode(
+            idtoken,
+            @options.client_secret,
+            true,
             algorithm: helpers.algorithm(@options),
             iss: @options.client_options.site,
             verify_iss: true,
@@ -82,7 +85,7 @@ module OmniAuth
             verify_jti: false,
             verify_sub: true,
             leeway: 60
-        })[0]
+        ).first
       end
 
       def should_sign_out?
