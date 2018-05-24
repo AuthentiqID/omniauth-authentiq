@@ -1,5 +1,7 @@
+require 'jwt'
 require 'omniauth-oauth2'
 require_relative 'helpers/helpers'
+
 module OmniAuth
   module Strategies
     class Authentiq < OmniAuth::Strategies::OAuth2
@@ -71,15 +73,15 @@ module OmniAuth
 
       def decode_idtoken(idtoken)
         (JWT.decode idtoken, @options.client_secret, true, {
-            :algorithm => helpers.algorithm(@options),
-            :iss => @options.client_options.site,
-            :verify_iss => true,
-            :aud => @options.client_id,
-            :verify_aud => true,
-            :verify_iat => true,
-            :verify_jti => false,
-            :verify_sub => true,
-            :leeway => 60
+            algorithm: helpers.algorithm(@options),
+            iss: @options.client_options.site,
+            verify_iss: true,
+            aud: @options.client_id,
+            verify_aud: true,
+            verify_iat: true,
+            verify_jti: false,
+            verify_sub: true,
+            leeway: 60
         })[0]
       end
 

@@ -1,3 +1,4 @@
+require 'jwt'
 require_relative '../helpers/helpers'
 
 module OmniAuth
